@@ -1,0 +1,12 @@
+version: "2.3"
+
+services:
+  centosvm:
+    build:
+      context: .
+      dockerfile: CentOS.SSHD.Dockerfile
+    scale: 1
+    volumes:
+     - /sys/fs/cgroup
+    cap_add:
+     - SYS_ADMIN
