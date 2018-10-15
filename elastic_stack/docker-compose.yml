@@ -1,0 +1,79 @@
+version: '3'
+
+networks:
+  elk: 
+    driver: bridge
+
+volumes:
+  elasticsearch:
+    driver: local
+
+services:
+
+  elasticsearch:
+    environment:
+      http.host: 0.0.0.0
+      transport.host: 127.0.0.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.1
+    networks:
+      - elk
+    ports:
+    - 9200:9200
+    restart: unless-stopped
+    volumes:
+    - ./elasticsearch/data:/usr/share/elasticsearch/data:rw
+
+  kibana:
+    depends_on:
+    - elasticsearch
+    environment:
+      ELASTICSEARCH_PASSWORD: changeme
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      ELASTICSEARCH_USERNAME: elastic
+    image: docker.elastic.co/kibana/kibana-oss:6.2.1
+    networks:
+      - elk
+    ports:
+    - 5601:5601
+    restart: unless-stopped
+
+  fluentd:
+    build: ./fluentd
+    volumes:
+      - ./fluentd/conf:/fluentd/etc
+    networks:
+      - elk
+    links:
+      - "elasticsearch"
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+
+  tomcat:
+    image: tomcat
+    volumes:
+      - ./target/:/usr/local/tomcat/webapps/
+    ports:
+      - "8009:8009"
+      - "8080:8080"
+    links:
+      - fluentd
+    networks:
+      - elk
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: tomcat.catalina
+
+  monitoring:
+    image: google/cadvisor:latest
+    ports:
+    - "9104:8080"
+    volumes:
+    - /:/rootfs:ro
+    - /var/run:/var/run:rw
+    - /sys:/sys:ro
+    - /var/lib/docker/:/var/lib/docker:ro
+    - /dev/disk/:/dev/disk:ro
+ 
