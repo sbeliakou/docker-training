@@ -10,3 +10,13 @@ services:
      - /sys/fs/cgroup
     cap_add:
      - SYS_ADMIN
+
+  ubuntuvm:
+    build:
+      context: .
+      dockerfile: Ubuntu.SSHD.Dockerfile
+    scale: 1
+    volumes:
+     - /sys/fs/cgroup:/sys/fs/cgroup
+    cap_add:
+     - SYS_ADMIN
