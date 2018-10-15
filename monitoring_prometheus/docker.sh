@@ -39,3 +39,6 @@ systemctl restart docker
 usermod -aG docker vagrant
 
 docker info
+
+yum install -y python-pip
+pip install docker-compose
