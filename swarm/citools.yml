@@ -1,0 +1,40 @@
+version: '3.6'
+
+services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    deploy:
+      placement:
+        constraints:
+          - node.role == worker
+    ports:
+      - 80:8080
+    environment:
+    - JAVA_OPTS=
+        -Djenkins.install.runSetupWizard=false
+        -Djava.awt.headless=true
+    volumes:
+      - 'jenkins-data:/var/jenkins_home'
+    logging:
+        driver: syslog
+        options:
+          tag: jenkins
+
+  nexus:
+    image: sonatype/nexus3
+    deploy:
+      placement:
+        constraints:
+          - node.role == worker
+    ports:
+      - 8081:8081
+    volumes:
+      - 'nexus-data:/nexus-data'
+    logging:
+        driver: syslog
+        options:
+          tag: nexus
+
+volumes:
+  jenkins-data:
+  nexus-data:
