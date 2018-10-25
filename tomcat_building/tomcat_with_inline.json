@@ -1,0 +1,51 @@
+{
+    "variables": {
+        "TOMCAT_ID": "1000",
+        "TOMCAT_HOME": "/opt/tomcat",
+        "TOMCAT_VERSION": "7.0.91"
+    },
+    "builders": [
+        {
+            "type": "docker",
+            "image": "openjdk:7-jre",
+            "commit": true,
+            "changes": [
+                "USER tomcat",
+                "LABEL application=tomcat",
+                "LABEL tomca_version={{user `TOMCAT_VERSION`}}",
+                "EXPOSE 8080",
+                "CMD /bin/bash /opt/tomcat/bin/catalina.sh run"
+            ]
+        }
+    ],
+
+    "provisioners": [
+        {
+            "type": "shell",
+            "environment_vars": [
+                "TOMCAT_VERSION={{user `TOMCAT_VERSION`}}",
+                "TOMCAT_ID={{user `TOMCAT_ID`}}",
+                "TOMCAT_HOME={{user `TOMCAT_HOME`}}"
+            ],
+            "inline": [
+                "cd $(dirname ${TOMCAT_HOME})",
+                "wget -q -O tomcat.zip https://archive.apache.org/dist/tomcat/tomcat-${TOMCAT_VERSION%%.*}/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.zip",
+                "unzip tomcat.zip",
+                "mv apache-tomcat-${TOMCAT_VERSION} tomcat",
+                "rm -f tomcat.zip",
+                "useradd tomcat -u ${TOMCAT_ID} --no-create-home -d ${TOMCAT_HOME}",
+                "chown -R tomcat: ${TOMCAT_HOME}"
+            ]
+        }
+    ],
+
+    "post-processors": [
+        [
+            {
+                "type": "docker-tag",
+                "repository": "sbeliakou/tomcat",
+                "tag": "{{ isotime \"2006-01-02-03-04-05\" }}"
+            }
+        ]
+    ]
+}
