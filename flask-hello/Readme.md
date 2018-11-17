@@ -58,6 +58,11 @@ docker run -d -P myflask
 docker port << CONTAINER ID >>
 ```
 
+Options details:
+- "-d" run container in detached mode (as service in background)
+- "-p X:Y" bind exact container port "Y" to exact host port "X"
+- "-P" bind all container exposed ports to random ports on the host
+
 ## Stop Application and Clean Up
 
 ```
