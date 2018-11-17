@@ -1,6 +1,6 @@
 # Run Python Flask Application
 
-![Slide Reference][images/slide36.png]
+![Slide Reference](images/slide36.png)
 
 ## Usefull Links
 - http://flask.pocoo.org/
