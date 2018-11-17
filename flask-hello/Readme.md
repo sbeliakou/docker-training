@@ -34,12 +34,12 @@ CMD flask run --host=0.0.0.0
 ```
 
 Each instruction creates one layer:
-- FROM creates a layer from the python:2.7 Docker image.
-- RUN performs necessary commands
-- COPY adds files from your Docker client’s current directory
-- ENV sets environment variable
-- EXPOSE defines which ports will be exposed by container
-- CMD specifies what command to run within the container
+- **FROM** creates a layer from the python:2.7 Docker image.
+- **RUN** performs necessary commands
+- **COPY** adds files from your Docker client’s current directory
+- **ENV** sets environment variable
+- **EXPOSE** defines which ports will be exposed by container
+- **CMD** specifies what command to run within the container
 
 ## Build Custom Image
 
