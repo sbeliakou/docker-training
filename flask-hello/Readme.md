@@ -34,7 +34,7 @@ CMD flask run --host=0.0.0.0
 ```
 
 Each instruction creates one layer:
-- **FROM** creates a layer from the python:2.7 Docker image.
+- **FROM** creates a layer from the `python:2.7` Docker image.
 - **RUN** performs necessary commands
 - **COPY** adds files from your Docker client’s current directory
 - **ENV** sets environment variable
