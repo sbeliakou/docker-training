@@ -60,7 +60,7 @@ docker port << CONTAINER ID >>
 
 ## Stop Application and Clean Up
 
-```bash
+```
 docker stop << CONTAINER ID >>
 docker rm << CONTAINER ID >>
 
