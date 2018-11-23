@@ -11,7 +11,7 @@ services:
     ports:
       - 8080:8080
     volumes:
-      - jenkins_data:/opt/jenkins/home
+      - jenkins_data:/var/jenkins_home
     logging:
       driver: journald
       options:
@@ -21,16 +21,15 @@ services:
       nofile:
         soft: 20000
         hard: 40000
-        
+
   nexus:
     image: sonatype/nexus3
     ports:
       - 8081:8081
     restart: always
     volumes:
-      - nexus_data:/nexus_data
+      - nexus_data:/nexus-data
 
 volumes:
     jenkins_data:
     nexus_data:
-    
