@@ -10,3 +10,6 @@ RUN pip install ansible==${ANSIBLE_VERSION}
 ENV ANSIBLE_LOCAL_TEMP=/tmp
 ENV ANSIBLE_FORCE_COLOR=true
 ENV PYTHONUNBUFFERED=1
+
+ENTRYPOINT ["ansible-playbook"]
+CMD ["--version"]
