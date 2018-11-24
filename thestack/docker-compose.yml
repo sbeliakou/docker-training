@@ -7,8 +7,26 @@ services:
       dockerfile: frontend.Dockerfile
     ports:
       - 80:80
+    volumes:
+      - ./conf/httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - ./conf/vhosts:/usr/local/apache2/conf/vhosts
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   backend:
     build:
       context: .
       dockerfile: backend.Dockerfile
+    volumes:
+      - tomcat_webapps:/usr/local/tomcat/webapps
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  tomcat_webapps:
