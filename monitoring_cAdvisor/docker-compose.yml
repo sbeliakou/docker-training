@@ -1,0 +1,14 @@
+version: "3.6"
+
+services:
+  web:
+    image: google/cadvisor:latest
+    ports:
+    - 0.0.0.0:9104:8080
+    volumes:
+    - /:/rootfs:ro
+    - /var/run:/var/run:rw
+    - /sys:/sys:ro
+    - /var/lib/docker/:/var/lib/docker:ro
+    - /dev/disk/:/dev/disk:ro
+
