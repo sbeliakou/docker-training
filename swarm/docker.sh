@@ -13,6 +13,8 @@ yum-config-manager --enable docker-ce-edge
 yum info docker-ce --disablerepo=* --enablerepo=docker-ce-edge && \
 yum install -y docker-ce 
 
+sed -i 's@\(ExecStart=/usr/bin/dockerd\).*@\1@' /usr/lib/systemd/system/docker.service
+
 mkdir -p /etc/docker
 cat <<EOF > /etc/docker/daemon.json
 {
