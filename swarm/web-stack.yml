@@ -1,0 +1,10 @@
+version: "3.6"
+
+services:
+  web:
+    image: sbeliakou/httpd-echo
+    ports:
+    - 80:80
+    deploy:
+      replicas: 2
+
