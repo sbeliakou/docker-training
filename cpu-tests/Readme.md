@@ -17,7 +17,18 @@ For more information, see the CFS documentation on bandwidth limiting.
 
 ## Testing Settings
 
+### Docker-Compose
+
 [docker-compose file](docker-compose.yml)
+
+```yaml
+version: "2.2" #  and higher
+service:
+  service_name:
+    cpu_quota: 10000
+    cpu_period: 100000
+    cpus: 0.15
+```
 
 ```bash
 $ docker-compose up -d
@@ -31,4 +42,12 @@ $ docker stats --no-stream --format "table {{.Name}}\t{{.CPUPerc}}"
 NAME                CPU %
 cpu010              9.56%
 cpu015              15.10%
+```
+
+### Docker Run
+
+```
+docker build -t stress .
+docker run docker run -it -d --cpu-quota=25000 --name cpu0.25 stress
+docker run docker run -it -d --cpus=0.35 --name cpu0.35 stress
 ```
