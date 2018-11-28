@@ -1,7 +1,7 @@
 # CPU Restrictions
 
 ## CPU period constraint
-The default CPU CFS (Completely Fair Scheduler) period is 100ms. We can use `--cpu-period` to set the period of CPUs to limit the container’s CPU usage. And usually --cpu-period should work with `--cpu-quota`.
+The default CPU CFS (Completely Fair Scheduler) period is 100ms. We can use `--cpu-period` to set the period of CPUs to limit the container’s CPU usage. And usually `--cpu-period` should work with `--cpu-quota`.
 
 Examples:
 ```bash
