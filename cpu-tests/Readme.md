@@ -47,7 +47,7 @@ cpu015              15.10%
 ### Docker Run
 
 ```
-docker build -t stress .
-docker run docker run -it -d --cpu-quota=25000 --name cpu0.25 stress
-docker run docker run -it -d --cpus=0.35 --name cpu0.35 stress
+$ docker build -t stress .
+$ docker run docker run -it -d --cpu-quota=25000 --name cpu0.25 stress
+$ docker run docker run -it -d --cpus=0.35 --name cpu0.35 stress
 ```
