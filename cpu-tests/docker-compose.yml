@@ -1,0 +1,16 @@
+version: "2.2"
+
+services:
+  # Docker <1.13
+  cpu010:
+    build: .
+    container_name: cpu010
+    cpu_quota:   10000
+    cpu_period: 100000
+  
+  # Docker >= 1.13
+  cpu015:
+    build: .
+    container_name: cpu015
+    cpus: 0.15
+
