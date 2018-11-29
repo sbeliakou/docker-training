@@ -7,6 +7,7 @@
     "builders": [
         {
             "type": "docker",
+            "name": "tomcat",
             "image": "openjdk:7-jre",
             "commit": true,
             "changes": [
