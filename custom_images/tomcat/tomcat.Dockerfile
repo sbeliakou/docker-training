@@ -17,4 +17,4 @@ ENV CATALINA_HOME=${TOMCAT_HOME}
 VOLUME ${TOMCAT_HOME}/webapps
 
 EXPOSE 8080
-CMD /bin/bash /opt/tomcat/bin/catalina.sh run
+CMD /bin/bash ${CATALINA_HOME}/bin/catalina.sh run
