@@ -7,3 +7,4 @@ mv apache-tomcat-${TOMCAT_VERSION} tomcat
 rm -f tomcat.zip
 useradd tomcat -u ${TOMCAT_ID} --no-create-home -d ${TOMCAT_HOME}
 chown -R tomcat: ${TOMCAT_HOME}
+
