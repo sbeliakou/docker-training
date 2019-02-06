@@ -26,6 +26,12 @@ Main Configuration in JSON (example):
             }
         ]
     },
+    "provisioners": [
+        {
+            "type": "shell",
+            ...
+        }
+    ],
     "post-processors": [
         [
             {
