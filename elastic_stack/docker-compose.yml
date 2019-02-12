@@ -9,23 +9,32 @@ volumes:
     driver: local
 
 services:
+  elasticsearch-init:
+    image: busybox
+    user: root
+    volumes:
+      - ./elasticsearch/data:/usr/share/elasticsearch/data:rw
+    command: chown -R 1000:1000 /usr/share/elasticsearch/data
 
   elasticsearch:
     environment:
       http.host: 0.0.0.0
       transport.host: 127.0.0.1
     image: docker.elastic.co/elasticsearch/elasticsearch:6.2.1
+    user: root
     networks:
       - elk
     ports:
-    - 9200:9200
+      - 9200:9200
     restart: unless-stopped
     volumes:
-    - ./elasticsearch/data:/usr/share/elasticsearch/data:rw
+      - ./elasticsearch/data:/usr/share/elasticsearch/data:rw
+    depends_on:
+      - elasticsearch-init
 
   kibana:
     depends_on:
-    - elasticsearch
+      - elasticsearch
     environment:
       ELASTICSEARCH_PASSWORD: changeme
       ELASTICSEARCH_URL: http://elasticsearch:9200
@@ -34,7 +43,7 @@ services:
     networks:
       - elk
     ports:
-    - 5601:5601
+      - 5601:5601
     restart: unless-stopped
 
   fluentd:
@@ -69,11 +78,11 @@ services:
   monitoring:
     image: google/cadvisor:latest
     ports:
-    - "9104:8080"
+      - "9104:8080"
     volumes:
-    - /:/rootfs:ro
-    - /var/run:/var/run:rw
-    - /sys:/sys:ro
-    - /var/lib/docker/:/var/lib/docker:ro
-    - /dev/disk/:/dev/disk:ro
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
  
