@@ -1,18 +1,6 @@
 version: "3"
 
 services:
-  jenkins-plugins:
-    image: jenkins/jenkins:lts
-    volumes:
-      - jenkins_plugins:/usr/share/jenkins/ref/plugins
-    user: root
-    command: /usr/local/bin/install-plugins.sh
-      workflow-aggregator
-      job-dsl
-      greenballs
-      ansicolor
-      git
-
   jenkins:
     image: jenkins/jenkins:lts
     restart: always
@@ -21,16 +9,28 @@ services:
           -Djenkins.install.runSetupWizard=false
           -Djava.awt.headless=true
       - DOCKER_HOST=tcp://docker:2375
+      - PLUGINS=
+          workflow-aggregator
+          job-dsl
+          maven-plugin
+          pipeline-maven
+          matrix-auth
+          antisamy-markup-formatter
+          greenballs
+          ansicolor
+          git
     ports:
       - 8080:8080
     volumes:
       - jenkins_data:/var/jenkins_home
-      - jenkins_plugins:/usr/share/jenkins/ref/plugins
       - ./jenkins/init.groovy.d:/var/jenkins_home/init.groovy.d
       - dind_bin:/usr/local/sbin
-    entrypoint: bash -c "while ping -c1 jenkins-plugins &>/dev/null; do sleep 1; done; /sbin/tini -- /usr/local/bin/jenkins.sh"
+    entrypoint: /bin/sh -c
+    command:
+      - >-
+          /usr/local/bin/install-plugins.sh $${PLUGINS};
+          /sbin/tini -- /usr/local/bin/jenkins.sh
     depends_on:
-      - jenkins-plugins
       - docker
 
   docker:
@@ -42,6 +42,5 @@ services:
 
 volumes:
     jenkins_data:
-    jenkins_plugins:
     dind_data:
     dind_bin:
