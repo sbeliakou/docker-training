@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    restart: always
+    environment:
+      - JAVA_OPTS=
+          -Djenkins.install.runSetupWizard=false
+          -Djava.awt.headless=true
+      - DOCKER_HOST=tcp://docker:2375
+    ports:
+      - 8080:8080
+    volumes:
+      - jenkins_data:/var/jenkins_home
+      - ./jenkins/init.groovy.d:/var/jenkins_home/init.groovy.d
+      - dind_bin:/usr/local/sbin
+    depends_on:
+      - docker
+
+  docker:
+    image: "docker:dind"
+    privileged: true
+    volumes:
+    - dind_bin:/usr/local/bin
+    - dind_data:/var/lib/docker
+
+volumes:
+    jenkins_data:
+    dind_data:
+    dind_bin:
