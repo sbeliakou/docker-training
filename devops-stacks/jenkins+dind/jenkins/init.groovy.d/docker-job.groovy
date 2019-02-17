@@ -8,8 +8,3 @@ job.save()
 
 build = job.scheduleBuild2(5, new hudson.model.Cause.UserIdCause())
 build.get()
-
-generatedJobs = build.getAction(javaposse.jobdsl.plugin.actions.GeneratedJobsBuildAction).getItems()
-generatedJobs.each {
-  j -> j.scheduleBuild2(5, new hudson.model.Cause.UserIdCause())
-}
