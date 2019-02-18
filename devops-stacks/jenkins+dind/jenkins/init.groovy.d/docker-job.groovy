@@ -2,7 +2,11 @@ import jenkins.model.Jenkins;
 import hudson.model.FreeStyleProject;
 import hudson.tasks.Shell;
 
-job = Jenkins.instance.createProject(FreeStyleProject, 'docker-job')
+import hudson.plugins.ansicolor.AnsiColorBuildWrapper
+ansiColorWrapper = new AnsiColorBuildWrapper("xterm")
+
+job = Jenkins.instance.createProject(FreeStyleProject, 'docker-freestyle-job')
+job.getBuildWrappersList().add(ansiColorWrapper)
 job.buildersList.add(new Shell('docker run --rm hello-world'))
 job.save()
 

@@ -2,9 +2,12 @@ version: "3"
 
 services:
   jenkins:
-    image: jenkins/jenkins:lts
+    image: jenkins/jenkins:latest
     restart: always
+    user: root
     environment:
+      - HOME=/var/jenkins_home
+      - JENKINS_HOME=/var/jenkins_home
       - JAVA_OPTS=
           -Djenkins.install.runSetupWizard=false
           -Djava.awt.headless=true
@@ -16,6 +19,7 @@ services:
           pipeline-maven
           matrix-auth
           antisamy-markup-formatter
+          docker-plugin
           greenballs
           ansicolor
           git
@@ -25,8 +29,9 @@ services:
       - jenkins_data:/var/jenkins_home
       - ./jenkins/init.groovy.d:/var/jenkins_home/init.groovy.d
       - dind_bin:/usr/local/sbin
-    entrypoint: /bin/sh -c
+    entrypoint: /bin/bash
     command:
+      - -c
       - >-
           /usr/local/bin/install-plugins.sh $${PLUGINS};
           /sbin/tini -- /usr/local/bin/jenkins.sh
