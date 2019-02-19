@@ -1,0 +1,18 @@
+def jenkinsfile = """
+node {
+  stage("With Docker Container") {
+    withDockerContainer('centos') {
+      sh "cat /etc/os-releases"
+    }
+  }
+}
+"""
+
+pipelineJob('docker-pipeline-test') {
+    definition {
+        cps {
+            script(jenkinsfile)
+            sandbox()
+        }
+    }
+}

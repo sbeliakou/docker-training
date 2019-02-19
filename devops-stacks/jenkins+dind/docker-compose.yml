@@ -1,0 +1,59 @@
+version: "3"
+
+services:
+  web:
+    image: nginx
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - 80:80
+    restart: unless-stopped
+    depends_on:
+      - jenkins
+
+  jenkins:
+    image: jenkins/jenkins:latest
+    restart: unless-stopped
+    environment:
+      - HOME=/var/jenkins_home
+      - JENKINS_HOME=/var/jenkins_home
+      - JAVA_OPTS=
+          -Djenkins.install.runSetupWizard=false
+          -Djava.awt.headless=true
+      - DOCKER_HOST=tcp://docker:2375
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASSWORD=admin
+      - PLUGINS=
+          workflow-aggregator
+          job-dsl
+          maven-plugin
+          pipeline-maven
+          matrix-auth
+          antisamy-markup-formatter
+          docker-plugin
+          greenballs
+          ansicolor
+          git
+    volumes:
+      - jenkins_data:/var/jenkins_home
+      - ./jenkins/init.groovy.d:/var/jenkins_home/init.groovy.d
+      - dind_bin:/usr/local/sbin
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |-
+          /usr/local/bin/install-plugins.sh $${PLUGINS}
+          /sbin/tini -- /usr/local/bin/jenkins.sh
+
+  docker:
+    image: "docker:dind"
+    privileged: true
+    restart: unless-stopped
+    volumes:
+    - dind_bin:/usr/local/bin
+    - dind_data:/var/lib/docker
+
+volumes:
+    jenkins_data:
+    dind_data:
+    dind_bin:
