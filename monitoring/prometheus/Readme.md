@@ -1,7 +1,7 @@
-# Prometheus stack
+### Prometheus stack
 
-
-## Add the following to enable docker daemon to expose its metrics
+### Prerequisites
+Add the following to enable docker daemon to expose its metrics
 
 ```bash
 $ cat /etc/docker/daemon.json
@@ -11,24 +11,12 @@ $ cat /etc/docker/daemon.json
 }
 ```
 
-## Clone the repo
+### Available Services:
 
-```bash
-$ git clone https://github.com/shreben/prometheus.git
-```
-
-## Enter the directory and run the stack
-
-```bash
-$ cd prometheus/
-$ docker-compose up -d
-```
-
-## Locate the tools under the following URLs
-
-	- http://localhost:3000			grafana (admin/foobar)
-	- http://localhost:9090			prometheus
-	- http://localhost:9093			alertmanager
-	- http://localhost:8500/ui/ 	consul
-	- http://localhost:8080			cadvisor
-	- http://localhost:9323/metrics full set of metrics exposed by docker engine
+Locate the tools under the following URLs
+	- http://<< host_ip/name >>:3000			grafana (admin/foobar)
+	- http://<< host_ip/name >>:9090			prometheus
+	- http://<< host_ip/name >>:9093			alertmanager
+	- http://<< host_ip/name >>:8500/ui/ 	consul
+	- http://<< host_ip/name >>:8080			cadvisor
+	- http://<< host_ip/name >>:9323/metrics full set of metrics exposed by docker engine

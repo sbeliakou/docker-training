@@ -1,0 +1,53 @@
+# my global config
+global:
+  scrape_interval:     15s # By default, scrape targets every 15 seconds.
+  evaluation_interval: 15s # By default, scrape targets every 15 seconds.
+  # scrape_timeout is set to the global default (10s).
+
+  # Attach these labels to any time series or alerts when communicating with
+  # external systems (federation, remote storage, Alertmanager).
+  external_labels:
+      monitor: global
+      cluster: dev
+
+# Load and evaluate rules in this file every 'evaluation_interval' seconds.
+rule_files:
+  - 'alert.rules'
+
+alerting:
+  alertmanagers:
+  - scheme: http
+    static_configs:
+    - targets:
+      - "alertmanager:9093"
+
+scrape_configs:
+  - job_name: consul
+    scrape_interval: 5s
+    consul_sd_configs:
+    - server: consul-server:8500
+      services:
+      - prometheus
+      - node-exporter
+      - cadvisor
+    relabel_configs:
+      - source_labels: [__meta_consul_service_address]
+        target_label: address
+      - source_labels: [__meta_consul_service]
+        target_label: service
+      - source_labels: [__meta_consul_service_port]
+        target_label: port
+  - job_name: docker
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['172.16.100.1:9323']
+  - job_name: federate-prometheus-slave
+    scrape_interval: 5s
+    metrics_path: /federate
+    honor_labels: true
+    params:
+      'match[]':
+        - '{job="prometheus"}' 
+    static_configs:
+            - targets: ['prometheus-slave:9090']
+

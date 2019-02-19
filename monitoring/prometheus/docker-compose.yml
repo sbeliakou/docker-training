@@ -1,0 +1,121 @@
+version: '3.1'
+
+services:
+  web:
+    image: nginx
+    volumes:
+      - ./nginx/services.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/index.html:/usr/share/nginx/html/index.html
+    ports:
+      - 80:80
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:v2.5.0
+    container_name: prometheus
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.external-url=http://localhost:9090/prometheus'
+      - '--web.route-prefix=/prometheus'
+    links:
+      - cadvisor:cadvisor
+      - alertmanager:alertmanager
+    depends_on:
+      - cadvisor
+    restart: unless-stopped
+
+  alertmanager:
+    image: prom/alertmanager
+    container_name: alertmanager
+    volumes:
+      - ./alertmanager/:/etc/alertmanager/
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+      - '--storage.path=/alertmanager'
+      - '--web.external-url=http://localhost:9093/alertmanager'
+      - '--web.route-prefix=/alertmanager'
+
+  prometheus-slave:
+    image: prom/prometheus:v2.5.0
+    container_name: prometheus-slave
+    volumes:
+      - ./prometheus-slave/:/etc/prometheus/
+      - prometheus-slave_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    ports:
+      - 8090:9090
+    restart: unless-stopped
+
+  node-exporter:
+    image: prom/node-exporter
+    container_name: node-exporter
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - --collector.filesystem.ignored-mount-points
+      - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
+    ports:
+      - 9100:9100
+    restart: unless-stopped
+
+  cadvisor:
+    image: google/cadvisor
+    container_name: cadvisor
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    user: "104"
+    depends_on:
+      - prometheus
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+      - ./grafana/defaults.ini:/usr/share/grafana/conf/defaults.ini
+    env_file:
+      - ./grafana/config.monitoring
+    restart: unless-stopped
+
+  consul-server:
+    image: consul:latest
+    container_name: consul-server
+    ports:
+      - 8500:8500
+    command: "agent -server -bootstrap -ui -client 0.0.0.0"
+    restart: unless-stopped
+
+  registrator:
+    image: gliderlabs/registrator:latest
+    container_name: registrator
+    depends_on:
+      - consul-server
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock
+    command: "consul://consul-server:8500"
+    restart: unless-stopped
+
+volumes:
+    prometheus_data:
+    prometheus-slave_data:
+    grafana_data:
