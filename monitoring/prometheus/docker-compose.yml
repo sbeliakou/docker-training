@@ -100,8 +100,6 @@ services:
   consul-server:
     image: consul:latest
     container_name: consul-server
-    ports:
-      - 8500:8500
     command: "agent -server -bootstrap -ui -client 0.0.0.0"
     restart: unless-stopped
 
