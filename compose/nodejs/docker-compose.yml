@@ -1,0 +1,46 @@
+version: "3"
+
+services:
+  # Init Pattern
+  git-checkout:
+    image: alpine/git
+    volumes:
+      - source_code:/workspace
+    tty: true
+    working_dir: /workspace
+    environment:
+      - REPO=https://github.com/heroku/node-js-sample.git
+      - BRANCH=master
+    entrypoint:
+      - /bin/sh
+    command:
+      - -c
+      - |-
+          test -d .git &&
+            (git checkout $${BRANCH}; git pull) ||
+            (git clone $${REPO} ./; git checkout $${BRANCH})
+          ls -A1p --color
+    healthcheck:
+      test: ["CMD", "echo"]
+
+  nodejs-build:
+    image: node:6.11.4
+    volumes:
+    - source_code:/workspace
+    - node_modules:/workspace/node_modules
+    tty: true
+    working_dir: /workspace
+    environment:
+      - LANG=en_US.UTF-8
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |-
+          while ping -c1 git-checkout &>/dev/null; do sleep 1; done
+          npm install
+    depends_on:
+      - git-checkout
+
+volumes:
+  source_code:
+  node_modules:
