@@ -64,7 +64,7 @@
 ### Namespaces:
 - https://www.lampstellar.com/node/28
 
-### Cgrpoups:
+### Cgroups:
 - https://github.com/docker/labs/tree/master/security/cgroups
 
 ### SWARM:
@@ -79,6 +79,14 @@
 
 ### DevOps:
 - https://techbeacon.com/these-devops-practices-will-speed-your-delivery-pipeline
+
+### Security
+- https://docs.docker.com/engine/security/security/
+- https://github.com/docker/labs/tree/master/security
+- https://sysdig.com/blog/20-docker-security-tools/
+- https://sysdig.com/blog/7-docker-security-vulnerabilities/#docker-host-and-kernel-security
+- https://github.com/anchore/anchore-engine
+- https://wiki.jenkins.io/display/JENKINS/Anchore+Container+Image+Scanner+Plugin
 
 ### Playground and Learn:
 - https://labs.play-with-docker.com/
