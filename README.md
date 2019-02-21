@@ -43,12 +43,29 @@
 ### Setting up WSL:
 - https://nickjanetakis.com/blog/setting-up-docker-for-windows-and-wsl-to-work-flawlessly
 
+### Samples:
+- https://docs.docker.com/samples/
+
+### Playground and Learn:
+- https://labs.play-with-docker.com/
+- https://training.play-with-docker.com/
+- https://katacoda.com/?q=Docker&hPP=12&idx=scenarios&p=0&is_v=1
+- https://www.katacoda.com/courses/docker-security/
+
+### Online Quizzes and Tests:
+- https://vitalflux.com/docker-certification-practice-questions-dockerfile/
+- https://djitz.com/certification/docker-certified-associate-test-review-questions-set-1-image-creation/
+
 ### Dockerfile:
 - https://kapeli.com/cheat_sheets/Dockerfile.docset/Contents/Resources/Documents/index
 - https://vsupalov.com/docker-arg-env-variable-guide/
 - https://github.com/gliderlabs/docker-alpine/blob/master/docs/usage.md
 
 ### Logging:
+- https://docs.docker.com/config/containers/logging/journald/
+- https://docs.docker.com/config/containers/logging/syslog/
+- https://docs.docker.com/config/containers/logging/fluentd/
+- https://docs.docker.com/config/containers/logging/awslogs/
 - https://logz.io/blog/logging-docker-containers-aws-cloudwatch/
 
 ### Linux Capabilities:
@@ -87,13 +104,3 @@
 - https://sysdig.com/blog/7-docker-security-vulnerabilities/#docker-host-and-kernel-security
 - https://github.com/anchore/anchore-engine
 - https://wiki.jenkins.io/display/JENKINS/Anchore+Container+Image+Scanner+Plugin
-
-### Playground and Learn:
-- https://labs.play-with-docker.com/
-- https://training.play-with-docker.com/
-- https://katacoda.com/?q=Docker&hPP=12&idx=scenarios&p=0&is_v=1
-- https://www.katacoda.com/courses/docker-security/
-
-### Online Quizzes and Tests:
-- https://vitalflux.com/docker-certification-practice-questions-dockerfile/
-- https://djitz.com/certification/docker-certified-associate-test-review-questions-set-1-image-creation/
