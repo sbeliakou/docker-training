@@ -1,5 +1,9 @@
 ## Useful Dockerd Configuration Options
 
+
+/etc/docker/daemon.json
+
+
 ### Root directory of persistent Docker state
 ```json
 {
