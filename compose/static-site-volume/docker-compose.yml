@@ -14,7 +14,7 @@ services:
   git-sync:
     image: openweb/git-sync:0.0.1
     environment:
-      GIT_SYNC_REPO: "https://github.com/openweb-nl/website-static.git"
+      GIT_SYNC_REPO: "https://github.com/cloudacademy/static-website-example.git"
       GIT_SYNC_DEST: "/git"
       GIT_SYNC_BRANCH: "master"
       GIT_SYNC_REV: "FETCH_HEAD"
