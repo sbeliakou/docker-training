@@ -4,12 +4,14 @@ services:
   nginx:
     image: nginx:latest
     ports:
-      - "80:80"
+      - "80"
     volumes:
       - website_sources:/usr/share/nginx/html:z
     depends_on:
       - git-sync
     restart: always
+    labels:
+      name: nginx
 
   git-sync:
     image: openweb/git-sync:0.0.1
@@ -22,6 +24,8 @@ services:
     volumes:
       - website_sources:/git:z
     restart: always
+    labels:
+      name: sidecar
 
 volumes:
   website_sources:
