@@ -1,9 +1,9 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
 Vagrant.configure("2") do |config|
-  # Base Vagrant Box,
-  # CentOS 7.5 Minimal,
-  # 20 GB HDD, nothing extra
+  # CentOS 7, 20 GB HDD, nothing extra
   config.vm.box = "sbeliakou/centos"
-  config.vm.box_version = "7.5"
 
   # VM IP Address in the Private Network
   config.vm.network :private_network, ip: "192.168.56.15"
