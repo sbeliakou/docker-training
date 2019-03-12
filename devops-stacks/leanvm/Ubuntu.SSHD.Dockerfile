@@ -1,7 +1,7 @@
 FROM ubuntu
 
 RUN apt-get update && apt-get install -y openssh-server openssh-client passwd sudo less 
-RUN useradd devops && echo devops:devops | /usr/sbin/chpasswd
+RUN useradd -m devops && chmod 750 /home/devops && echo devops:devops | /usr/sbin/chpasswd
 RUN echo 'devops ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/devops
 
 ENV LANG=en_US.UTF-8
