@@ -1,0 +1,33 @@
+version: "3.6"
+
+services:
+  nodejs-build:
+    image: node:6.11.4
+
+    volumes:
+    # mountin current dir with code into container
+    - type: bind
+      source: ./
+      target: /workdir
+
+    # don't need to keep cache persistantly
+    # - type: tmpfs
+    #   target: /workdir/node_modules
+
+    # keeping cache in external volume
+    - type: volume
+      target: /workdir/node_modules
+
+    # for pretty output
+    tty: true
+    environment:
+      - LANG=en_US.UTF-8
+
+    # here's our code inside container
+    working_dir: /workdir
+
+    # preventing newtoek creation for the stack
+    network_mode: bridge
+
+    # do the stuff
+    command: npm install
