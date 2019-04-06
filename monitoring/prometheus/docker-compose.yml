@@ -1,4 +1,4 @@
-version: '3.1'
+version: '3'
 
 services:
   web:
@@ -29,7 +29,9 @@ services:
     depends_on:
       - cadvisor
     restart: unless-stopped
-
+    extra_hosts:
+      - "docker-host:172.100.0.1"
+      
   alertmanager:
     image: prom/alertmanager
     container_name: alertmanager
@@ -112,6 +114,13 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock
     command: "consul://consul-server:8500"
     restart: unless-stopped
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 172.100.0.0/16
 
 volumes:
     prometheus_data:

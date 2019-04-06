@@ -40,14 +40,13 @@ scrape_configs:
   - job_name: docker
     scrape_interval: 5s
     static_configs:
-      - targets: ['172.16.100.1:9323']
+      - targets: ['docker-host:9323']
   - job_name: federate-prometheus-slave
     scrape_interval: 5s
     metrics_path: /federate
     honor_labels: true
     params:
       'match[]':
-        - '{job="prometheus"}' 
+        - '{job="prometheus"}'
     static_configs:
             - targets: ['prometheus-slave:9090']
-
