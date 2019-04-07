@@ -37,10 +37,12 @@ scrape_configs:
         target_label: service
       - source_labels: [__meta_consul_service_port]
         target_label: port
+
   - job_name: docker
     scrape_interval: 5s
     static_configs:
       - targets: ['docker-host:9323']
+
   - job_name: federate-prometheus-slave
     scrape_interval: 5s
     metrics_path: /federate
@@ -49,4 +51,4 @@ scrape_configs:
       'match[]':
         - '{job="prometheus"}'
     static_configs:
-            - targets: ['prometheus-slave:9090']
+      - targets: ['prometheus-slave:9090']

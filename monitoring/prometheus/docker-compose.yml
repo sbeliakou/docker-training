@@ -1,4 +1,4 @@
-version: '3'
+version: '2.3'
 
 services:
   web:
@@ -30,8 +30,8 @@ services:
       - cadvisor
     restart: unless-stopped
     extra_hosts:
-      - "docker-host:172.100.0.1"
-      
+      - "docker-host:192.168.56.15"
+
   alertmanager:
     image: prom/alertmanager
     container_name: alertmanager
@@ -83,6 +83,8 @@ services:
       - /var/run:/var/run:rw
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
+    ports:
+    - 8080
     restart: unless-stopped
 
   grafana:
@@ -103,6 +105,8 @@ services:
     image: consul:latest
     container_name: consul-server
     command: "agent -server -bootstrap -ui -client 0.0.0.0"
+    ports:
+    - 8500
     restart: unless-stopped
 
   registrator:
@@ -117,10 +121,10 @@ services:
 
 networks:
   default:
-    driver: bridge
     ipam:
+      driver: default
       config:
-      - subnet: 172.100.0.0/16
+      - subnet: 172.31.0.0/16
 
 volumes:
     prometheus_data:
