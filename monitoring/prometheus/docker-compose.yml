@@ -23,9 +23,6 @@ services:
       - '--web.console.templates=/usr/share/prometheus/consoles'
       - '--web.external-url=http://localhost:9090/prometheus'
       - '--web.route-prefix=/prometheus'
-    links:
-      - cadvisor:cadvisor
-      - alertmanager:alertmanager
     depends_on:
       - cadvisor
     restart: unless-stopped
@@ -84,7 +81,7 @@ services:
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
     ports:
-    - 8080
+    - 8080:8080
     restart: unless-stopped
 
   grafana:
@@ -106,7 +103,7 @@ services:
     container_name: consul-server
     command: "agent -server -bootstrap -ui -client 0.0.0.0"
     ports:
-    - 8500
+    - 8500:8500
     restart: unless-stopped
 
   registrator:
