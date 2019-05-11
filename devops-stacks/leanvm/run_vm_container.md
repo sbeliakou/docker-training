@@ -57,21 +57,28 @@ $ docker exec $(docker ps -ql) systemctl status
 version: "3"
 
 services:
-  centosvm:
+  centosvm-vanilla:
     image: centos:7
     command:
       - /usr/lib/systemd/systemd
     volumes:
-     - /sys/fs/cgroup
+      - /sys/fs/cgroup
     cap_add:
-     - SYS_ADMIN
+      - SYS_ADMIN
+
+  centosvm:
+    build:
+      context: .
+      dockerfile: CentOS.Systemd.Dockerfile
+    cap_add:
+      - SYS_ADMIN
 
   ubuntuvm:
     build:
       context: .
       dockerfile: Ubuntu.Systemd.Dockerfile
     volumes:
-     - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
     cap_add:
-     - SYS_ADMIN
+      - SYS_ADMIN
 ```
