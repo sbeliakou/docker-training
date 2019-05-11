@@ -27,6 +27,11 @@ $ docker exec $(docker ps -ql) systemctl status
              │ └─29 /usr/lib/systemd/systemd-logind
              └─systemd-journald.service
                └─18 /usr/lib/systemd/systemd-journald
+
+$ docker run -d --cap-add sys_admin sbeliakou/centos-systemd:7
+$ docker exec $(docker ps -ql) systemctl status | grep -B1 State
+● 9faed27cea63
+    State: running
 ```
 
 ## Ubuntu
