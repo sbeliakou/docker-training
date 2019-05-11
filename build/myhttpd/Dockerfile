@@ -1,4 +1,4 @@
-FROM centos
+FROM centos:7
 LABEL maintainer="Siarhei Beliakou"
 RUN yum install -y httpd web-assets-httpd && \
     yum clean all
