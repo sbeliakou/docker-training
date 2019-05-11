@@ -1,3 +1,8 @@
+## Objectives
+
+- To have a set of VM-like Containers for testing VM-based provisioning scripts
+- Replacement to Vagrant based Local Engineering Environment
+
 ## CentOS
 
 ### CLI
@@ -25,6 +30,7 @@ $ docker exec $(docker ps -ql) systemctl status
 ```
 
 ## Ubuntu
+
 ```
 $ docker build -f Ubuntu.Systemd.Dockerfile -t sbeliakou/ubuntu-systemd:18.04 .
 $ docker run -d --cap-add sys_admin -v /sys/fs/cgroup:/sys/fs/cgroup:ro sbeliakou/ubuntu-systemd:18.04
@@ -70,6 +76,7 @@ services:
     build:
       context: .
       dockerfile: CentOS.Systemd.Dockerfile
+    image: sbeliakou/centos-systemd:7
     cap_add:
       - SYS_ADMIN
 
@@ -77,6 +84,7 @@ services:
     build:
       context: .
       dockerfile: Ubuntu.Systemd.Dockerfile
+    image: sbeliakou/ubuntu-systemd:18.04
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
     cap_add:
