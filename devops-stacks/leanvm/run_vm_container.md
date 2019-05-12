@@ -5,7 +5,6 @@
 
 ## CentOS
 
-### CLI
 ```
 $ docker run -it --rm centos readlink /usr/sbin/init
 ../lib/systemd/systemd
