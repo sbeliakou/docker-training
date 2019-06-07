@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+  vault:
+    image: vault
+    entrypoint:
+      - /bin/sh
+      - /entrypoint.sh
+    tty: true
+    volumes:
+      - vault_data:/vault/file
+      - ./vault.json:/vault/config/vault.json
+      - ./entrypoint.sh:/entrypoint.sh
+    ports:
+      - 8200:8200
+    cap_add:
+      - IPC_LOCK
+    environment:
+      - VAULT_ADDR=http://127.0.0.1:8200
+      - TOKEN=root
+
+volumes:
+  vault_data:
