@@ -142,7 +142,7 @@
         }
       ],
       "thresholds": "",
-      "title": "Uptime",
+      "title": "Prometheus Uptime",
       "type": "singlestat",
       "valueFontSize": "80%",
       "valueMaps": [
