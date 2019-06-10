@@ -27,7 +27,7 @@ services:
       - cadvisor
     restart: unless-stopped
     extra_hosts:
-      - "docker-host:192.168.56.15"
+      - "docker-host:172.31.0.1"
 
   alertmanager:
     image: prom/alertmanager

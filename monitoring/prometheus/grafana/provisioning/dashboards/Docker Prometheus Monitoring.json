@@ -135,7 +135,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "time() - process_start_time_seconds{service=\"prometheus\"}",
+          "expr": "time() - process_start_time_seconds{job=\"prometheus\"}",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
