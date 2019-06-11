@@ -12,10 +12,6 @@ services:
       - 8080:8080
     volumes:
       - jenkins_data:/var/jenkins_home
-    logging:
-      driver: journald
-      options:
-        tag: jenkins
     ulimits:
       nproc: 65535
       nofile:
