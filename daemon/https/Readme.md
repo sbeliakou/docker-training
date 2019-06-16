@@ -47,6 +47,9 @@ $ openssl x509 -req -sha256 -days 365 \
 # Setting Permissions
 $ chmod -v 0400 server-key.pem
 $ chmod -v 0444 server-cert.pem
+
+# Remove files
+rm server.csr extfile.cnf
 ```
 
 4 Configuring Docker Daemon
@@ -84,6 +87,9 @@ $ openssl x509 -req -sha256 -days 365 \
   -CA ca.pem -CAkey ca-key.pem -CAcreateserial \
   -extfile extfile-client.cnf \
   -in client.csr -out key.pem 
+
+# Remove files
+rm client.csr extfile-client.cnf
 ```
 
 ### Client Side Configuration
