@@ -1,0 +1,53 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "sbeliakou/centos"
+  config.vm.network :private_network, ip: "192.168.56.15"
+  config.vm.hostname = "docker-host"
+
+  config.ssh.insert_key = false
+  config.vm.provider "virtualbox" do |vb|
+    vb.name = "docker-host"
+    vb.customize ["modifyvm", :id, "--cpuexecutioncap", "30"]
+    vb.memory = "2048"
+  end
+
+  config.vm.provision "shell", inline: <<-SHELL
+    # jq, net-tools required for troubleshooting needs
+    yum install -y yum-utils jq net-tools python-pip
+  SHELL
+
+  config.vm.provision "installing docker", type: "ansible_local" do |ansible|
+    ansible.playbook = "docker-install.yml"
+    ansible.become = true
+    ansible.verbose  = true
+    ansible.install  = true
+    ansible.install_mode = "pip"
+    ansible.version = "2.8.1"
+  end
+
+  config.vm.provision "configuring tls", type: "ansible_local" do |ansible|
+    ansible.playbook = "docker-tls.yml"
+    ansible.become = true
+    ansible.verbose  = true
+    ansible.install  = true
+    ansible.install_mode = "pip"
+    ansible.version = "2.8.1"
+    ansible.raw_arguments = [
+      "-e cert_dir_client=/vagrant/client",
+      "-e cn=docker-host"
+    ]
+  end
+
+  config.vm.post_up_message = <<-EOM
+    It's done!
+
+    export DOCKER_CERT_PATH=$(pwd)/client
+    export DOCKER_TLS_VERIFY=1
+    export DOCKER_HOST=tcp://docker-host:2376
+
+    docker info
+  EOM
+
+end

@@ -1,0 +1,141 @@
+- hosts: all
+  connection: local
+  gather_facts: no
+
+  vars:
+    cert_dir: /etc/docker/certs.d
+    cert_dir_ca: "{{ cert_dir }}/ca/"
+    cert_dir_server: "{{ cert_dir }}/server"
+    cert_dir_client: "{{ cert_dir }}/client"
+
+    ca_cert_passphrase: passphrase
+
+    cn: docker.playpit.net
+
+  tasks:
+
+  - name: Ensure python OpenSSL dependencies are installed.
+    pip:
+      name: pyOpenSSL
+      state: present
+
+  - name: create certs folders
+    file:
+      path: "{{ item }}"
+      state: directory
+    loop:
+    - "{{ cert_dir }}"
+    - "{{ cert_dir_ca }}"
+    - "{{ cert_dir_server }}"
+    - "{{ cert_dir_client }}"
+
+  - name: CA Keys
+    block:
+      - name: CA Private Key (Certificate)
+        openssl_privatekey:
+          path: "{{ cert_dir_ca }}/ca-key.pem"
+          passphrase: "{{ ca_cert_passphrase }}"
+          cipher: aes256
+          size: 4096
+        notify:
+        - Restart Docker service
+
+      - name: CA Public Key
+        shell: >-
+          openssl req -new -x509 -subj "/C=BY/ST=Minsk/L=Minsk/O=playpit.net/OU=Devops/CN={{ cn }}" 
+          -days 365 -passin pass:{{ ca_cert_passphrase }} 
+          -key {{ cert_dir_ca }}/ca-key.pem -sha256 
+          -out {{ cert_dir_ca }}/ca.pem
+
+      - copy: 
+          src: "{{ cert_dir_ca }}/ca.pem"
+          dest: "{{ cert_dir_client }}"
+          remote_src: yes
+
+  - name: Server Keys
+    block:
+      - name: Server Private Key
+        openssl_privatekey:
+          path: "{{ cert_dir_server }}/server-key.pem"
+          size: 4096
+        notify:
+        - Restart Docker service
+
+      - name: Server CSR
+        openssl_csr:
+          path: "{{ cert_dir_server }}/server.csr"
+          privatekey_path: "{{ cert_dir_server }}/server-key.pem"
+          common_name: "{{ cn }}"
+          digest: sha256
+        notify:
+        - Restart Docker service
+
+      - name: Sign Server with CA
+        openssl_certificate:
+          path: "{{ cert_dir_server }}/server-cert.pem"
+          csr_path: "{{ cert_dir_server }}/server.csr"
+          ownca_path: "{{ cert_dir_ca }}/ca.pem"
+          ownca_privatekey_path: "{{ cert_dir_ca }}/ca-key.pem"
+          ownca_privatekey_passphrase: "{{ ca_cert_passphrase }}"
+          provider: ownca
+          extended_key_usage:
+          - serverAuth
+          subject_alt_name:
+          - DNS:{{ cn }}
+          - IP:0.0.0.0
+        notify:
+        - Restart Docker service
+        
+
+  - name: Client Certificates
+    block:
+      - name: Client Private Key
+        openssl_privatekey:
+          path: "{{ cert_dir_client }}/key.pem"
+          size: 4096
+
+      - name: Client CSR
+        openssl_csr:
+          path: "{{ cert_dir_client }}/client.csr"
+          privatekey_path: "{{ cert_dir_client }}/key.pem"
+          common_name: client
+
+      - name: Sign Client with CA
+        openssl_certificate:
+          path: "{{ cert_dir_client }}/cert.pem"
+          csr_path: "{{ cert_dir_client }}/client.csr"
+          ownca_path: "{{ cert_dir_ca }}/ca.pem"
+          ownca_privatekey_path: "{{ cert_dir_ca }}/ca-key.pem"
+          ownca_privatekey_passphrase: "{{ ca_cert_passphrase }}"
+          provider: ownca
+          extended_key_usage:
+          - clientAuth
+
+  - name: Configure Docker Service
+    block:
+        - name: docker config
+          copy:
+            dest: /etc/docker/daemon.json
+            content: |
+              {
+                "hosts": [
+                  "unix:///var/run/docker.sock",
+                  "tcp://0.0.0.0:2376"
+                ],
+                "tls": true,
+                "tlsverify": true,
+                "tlscacert": "{{ cert_dir_ca }}/ca.pem",
+                "tlscert": "{{ cert_dir_server }}/server-cert.pem",
+                "tlskey": "{{ cert_dir_server }}/server-key.pem"
+              }
+          become: yes
+
+
+  handlers:
+  - name: Restart Docker service
+    systemd:
+      name: docker
+      state: restarted
+      enabled: yes
+      daemon_reload: yes
+    become: yes

@@ -1,0 +1,47 @@
+- hosts: all
+  connection: local
+  gather_facts: no
+
+  tasks:
+  - name: Install yum utils
+    yum:
+      name: yum-utils
+      state: latest
+
+  - name: Add Docker repo
+    get_url:
+      url: https://download.docker.com/linux/centos/docker-ce.repo
+      dest: /etc/yum.repos.d/docer-ce.repo
+    become: yes
+
+  - name: Enable Docker Edge repo
+    ini_file:
+      dest: /etc/yum.repos.d/docer-ce.repo
+      section: 'docker-ce-edge'
+      option: enabled
+      value: 0
+    become: yes
+
+  - name: Install Docker
+    package:
+      name: docker-ce
+      state: latest
+    become: yes
+
+  - name: update docker.service unit
+    lineinfile:
+      path: /usr/lib/systemd/system/docker.service
+      regexp: "ExecStart=/usr/bin/dockerd./*"
+      line: "ExecStart=/usr/bin/dockerd --containerd=/run/containerd/containerd.sock"
+      backup: yes
+    become: yes
+
+  - name: Start Docker service
+    systemd:
+      name: docker
+      state: started
+      enabled: yes
+      daemon_reload: yes
+    become: yes
+
+    
