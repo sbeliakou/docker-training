@@ -44,3 +44,5 @@ docker run \
     image_name
 ```
 
+## More Details
+- https://vsupalov.com/docker-arg-vs-env/
