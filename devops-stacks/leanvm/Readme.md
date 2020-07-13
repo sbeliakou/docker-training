@@ -4,7 +4,7 @@
 
 We just need sshd running in VM and user credentials
 ```dockerfile
-FROM centos
+FROM centos:7
 
 RUN yum install -y systemd openssh-server && systemctl enable sshd
 RUN useradd devops && echo devops | passwd devops --stdin
