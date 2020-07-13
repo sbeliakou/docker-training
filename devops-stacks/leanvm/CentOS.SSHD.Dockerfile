@@ -1,4 +1,4 @@
-FROM centos
+FROM centos:7
 
 RUN yum install -y systemd openssh-server openssh-clients passwd sudo less && \
     systemctl enable sshd
