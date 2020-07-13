@@ -6,10 +6,10 @@
 ## CentOS
 
 ```
-$ docker run -it --rm centos readlink /usr/sbin/init
+$ docker run -it --rm centos:7 readlink /usr/sbin/init
 ../lib/systemd/systemd
 
-$ docker run -d -v /sys/fs/cgroup --cap-add sys_admin centos /usr/lib/systemd/systemd
+$ docker run -d -v /sys/fs/cgroup --cap-add sys_admin centos:7 /usr/lib/systemd/systemd
 $ docker exec $(docker ps -ql) systemctl status
 ● b57a46803c38
     State: running
